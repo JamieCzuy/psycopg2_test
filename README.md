@@ -68,7 +68,7 @@ It has 3 services:
 * db_server - standard postgres server
 * db_creator - temp service that just creates the test database
 on the db_server
-* tester - this one is built using the Dockerfile and using
+* tester - this one is built using the Dockerfile and uses
 python to run the [postgres tests defined here](http://initd.org/psycopg/docs/install.html#running-the-test-suite)
 
 
