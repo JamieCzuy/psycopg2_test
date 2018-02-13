@@ -1,0 +1,37 @@
+version: '3'
+
+networks:
+  private:
+
+services:
+
+  db:
+    # Keep same as AWS Aurora Postgres
+    image: postgres:9.6.3
+    networks:
+      - private
+    ports:
+      - "5432:5432"
+
+  db_creator:
+    image: postgres:9.6.3
+    command: ["bash", "-c", "echo 'sleeping for 10'; sleep 10; echo 'done sleeping'; echo 'creating database (test)'; psql -h db -U postgres -c 'create database test;'; echo 'done creating database (test)'"]
+    depends_on:
+      - db
+    networks:
+      - private
+
+  tester:
+    build: .
+    command: python -c "import time; time.sleep(15); from psycopg2 import tests; tests.unittest.main(defaultTest='tests.test_suite');" --verbose
+    depends_on:
+      - db_creator
+    environment:
+      - PSYCOPG2_TESTDB=test
+      - PSYCOPG2_TESTDB_HOST=db
+      - PSYCOPG2_TESTDB_PORT=5432
+      - PSYCOPG2_TESTDB_USER=postgres
+    networks:
+      - private
+    volumes:
+      - .:/code
