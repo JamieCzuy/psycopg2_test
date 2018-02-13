@@ -90,7 +90,7 @@ use ctl-c or open another terminal to run the clean up command.
 
 ### The Clean Up command
 ```
-docker-compose -p psycopg2 down
+docker-compose -p psycopg2_test down
 ```
 This stops and deletes all service containers created
 by the `up` command.
